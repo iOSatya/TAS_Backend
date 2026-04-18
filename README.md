@@ -41,6 +41,54 @@ php artisan boost:install
 
 Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
 
+## API Documentation
+
+This Laravel application provides a RESTful API with user authentication and admin user management features.
+
+### Features
+- **User Authentication**: Register, login, logout, profile management
+- **Admin User Management**: Full CRUD operations for users (admin-only)
+- **Role-based Access**: Simple boolean `is_admin` field for authorization
+- **Password Management**: User password updates and admin password reset
+- **Token-based Authentication**: Laravel Sanctum for API token authentication
+
+### Quick Start
+
+1. **Install dependencies**:
+   ```bash
+   composer install
+   npm install
+   ```
+
+2. **Setup environment**:
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
+
+3. **Run migrations and seed database**:
+   ```bash
+   php artisan migrate --seed
+   ```
+
+4. **Start development server**:
+   ```bash
+   php artisan serve
+   ```
+
+### Seeded Users
+- **Admin User**: `admin@example.com` (password: `password`)
+- **Regular User**: `test@example.com` (password: `password`)
+
+### API Usage
+Detailed API documentation with examples for all endpoints is available in [API_USAGE.md](API_USAGE.md).
+
+### Testing
+Run the test suite:
+```bash
+php artisan test
+```
+
 ## Contributing
 
 Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
