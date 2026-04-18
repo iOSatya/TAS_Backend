@@ -231,4 +231,58 @@ class AuthTest extends TestCase
 
         $response->assertStatus(401);
     }
+
+    public function test_delete_account_success(): void
+    {
+        $user = User::factory()->create([
+            'password' => Hash::make('password123'),
+        ]);
+        Sanctum::actingAs($user, ['*']);
+
+        $response = $this->deleteJson('/api/profile', [
+            'password' => 'password123',
+        ]);
+
+        $response->assertStatus(200)
+            ->assertJson(['message' => 'Account deleted successfully']);
+
+        $this->assertDatabaseMissing('users', ['id' => $user->id]);
+    }
+
+    public function test_delete_account_incorrect_password(): void
+    {
+        $user = User::factory()->create([
+            'password' => Hash::make('password123'),
+        ]);
+        Sanctum::actingAs($user, ['*']);
+
+        $response = $this->deleteJson('/api/profile', [
+            'password' => 'wrongpassword',
+        ]);
+
+        $response->assertStatus(422)
+            ->assertJson(['message' => 'Password is incorrect']);
+    }
+
+    public function test_delete_account_validation_errors(): void
+    {
+        $user = User::factory()->create();
+        Sanctum::actingAs($user, ['*']);
+
+        $response = $this->deleteJson('/api/profile', [
+            'password' => '',
+        ]);
+
+        $response->assertStatus(422)
+            ->assertJsonValidationErrors(['password']);
+    }
+
+    public function test_delete_account_unauthenticated(): void
+    {
+        $response = $this->deleteJson('/api/profile', [
+            'password' => 'password123',
+        ]);
+
+        $response->assertStatus(401);
+    }
 }

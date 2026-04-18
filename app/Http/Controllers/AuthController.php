@@ -120,4 +120,28 @@ class AuthController extends Controller
             'user' => $request->user(),
         ]);
     }
+
+    public function destroy(Request $request)
+    {
+        $user = $request->user();
+
+        $validator = Validator::make($request->all(), [
+            'password' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        if (! Hash::check($request->password, $user->password)) {
+            return response()->json(['message' => 'Password is incorrect'], 422);
+        }
+
+        $user->tokens()->delete();
+        $user->delete();
+
+        return response()->json([
+            'message' => 'Account deleted successfully',
+        ], 200);
+    }
 }
